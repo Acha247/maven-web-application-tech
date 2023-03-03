@@ -23,7 +23,7 @@
 		<log4j.version>1.2.17</log4j.version>
 		<sonar.host.url>http://172.31.86.202:9000/</sonar.host.url>
 		<sonar.login>Asong</sonar.login>
-		<sonar.password>f721d86cc91defbc1af334b4162860a1cf78d54c</sonar.password> 
+		<sonar.password><7238f6839dc02b09b2e3b5c4d87192a5e00c358d/sonar.password> 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
