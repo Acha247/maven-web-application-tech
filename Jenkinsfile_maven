@@ -1,0 +1,33 @@
+node{
+def mavenHome = tool name:'maven 3.9.0'
+ stage("1cloneCode"){
+  git "https://github.com/Acha247/maven-web-application-tech"
+ }
+ stage("2testandbuild"){
+  sh "${mavenHome}/bin/mvn clean package"
+ }
+ stage("3codeQuality"){
+ sh "${mavenHome}/bin/mvn sonar:sonar"
+ }
+ stage("4uploadartifacts"){
+ sh "${mavenHome}/bin/mvn deploy"
+ }
+ stage("5deploytoUAT"){
+  sh "echo 'deploy to UAT'"
+  deploy adapters: [tomcat9(credentialsId: 'tomcat-cred4', path: '', url: 'http://100.25.3.148:8080/')], contextPath: null, war: 'target/*war'
+ }
+ stage("6approvalgate"){
+ sh "echo 'ready for review'"
+ timeout(time:5, unit:"DAYS"){
+ input message: 'Application ready for deployment, please review and approve'
+   }
+ }
+ stage("7deploy2prod"){
+ deploy adapters: [tomcat9(credentialsId: 'tomcat-cred4', path: '', url: 'http://100.25.3.148:8080/')], contextPath: null, war: 'target/*war'
+ }
+ stage("8emailNotification"){
+ emailext body: '''Hi all
+check Build status
+Genesis evolution''', recipientProviders: [buildUser(), contributor(), developers(), brokenBuildSuspects(), brokenTestsSuspects(), upstreamDevelopers()], subject: 'check build status', to: 'check build status'
+ }
+}
